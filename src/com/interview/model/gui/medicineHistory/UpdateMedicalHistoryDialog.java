@@ -19,6 +19,7 @@ public class UpdateMedicalHistoryDialog extends JDialog {
 
     private JButton updateButton;
     private JButton cancelButton;
+    private String selectedPatientId;
 
     public UpdateMedicalHistoryDialog(Frame parent, String id) {
         super(parent, "Update Medical History", true);
