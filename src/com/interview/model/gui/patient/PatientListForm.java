@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class PatientListGUI extends JFrame {
+public class PatientListForm extends JFrame {
     private DefaultTableModel tableModel;
     private JTable patientTable;
     private JTextField searchField;
@@ -24,7 +24,7 @@ public class PatientListGUI extends JFrame {
     private JButton edit; // New button
     private JButton delete; // New button
 
-    public PatientListGUI() {
+    public PatientListForm() {
         super("Patient List Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 400);
@@ -94,7 +94,7 @@ public class PatientListGUI extends JFrame {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddPatient addPatientDialog = new AddPatient(PatientListGUI.this);
+                AddPatient addPatientDialog = new AddPatient(PatientListForm.this);
                 addPatientDialog.setVisible(true);
                 fetchPatientDataFromDatabase();
             }
@@ -108,11 +108,11 @@ public class PatientListGUI extends JFrame {
                 if (selectedRows.length > 0) {
                     String patientID = patientTable.getValueAt(selectedRows[0],0).toString();
                     System.out.println(patientID);
-                    EditPatient editPatientDialog = new EditPatient(PatientListGUI.this,patientID );
+                    EditPatient editPatientDialog = new EditPatient(PatientListForm.this,patientID );
                     editPatientDialog.setVisible(true);
                     fetchPatientDataFromDatabase();
                 } else {
-                    JOptionPane.showMessageDialog(PatientListGUI.this,
+                    JOptionPane.showMessageDialog(PatientListForm.this,
                             "Please select at least one patient.",
                             "No Patient Selected",
                             JOptionPane.WARNING_MESSAGE);
@@ -131,7 +131,7 @@ public class PatientListGUI extends JFrame {
                     }
                     new PatientInfoGUI (selectedPatients).setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(PatientListGUI.this,
+                    JOptionPane.showMessageDialog(PatientListForm.this,
                             "Please select at least one patient.",
                             "No Patient Selected",
                             JOptionPane.WARNING_MESSAGE);
@@ -182,9 +182,9 @@ public class PatientListGUI extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            PatientListGUI patientListGUI = new PatientListGUI();
-            patientListGUI.setVisible(true);
-            patientListGUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            PatientListForm patientListForm = new PatientListForm();
+            patientListForm.setVisible(true);
+            patientListForm.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         });
     }
