@@ -6,7 +6,7 @@ package com.interview.model.gui.patient;
  * Created at : 4/27/2024
  */
 
-import DBUtils.DBConnection;
+import com.interview.DBUtils.DBConnection;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

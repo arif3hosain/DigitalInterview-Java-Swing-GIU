@@ -1,7 +1,8 @@
-package com.interview.model.gui.patient;
+package com.interview.gui.patient;
 
 
-import DBUtils.DBConnection;
+import com.interview.DBUtils.DBConnection;
+import com.interview.other.Msg;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -198,7 +199,7 @@ public class AddPatient extends JDialog {
 
             // Execute insert query
             pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Record saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, Msg.Save, "Success", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (SQLException ex) {
             ex.printStackTrace();

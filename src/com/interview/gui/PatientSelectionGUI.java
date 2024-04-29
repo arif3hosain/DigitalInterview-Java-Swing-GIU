@@ -1,7 +1,7 @@
 package com.interview.model.gui;
 
 
-import DBUtils.DBConnection;
+import com.interview.DBUtils.DBConnection;
 
 import javax.swing.*;
 import java.awt.*;

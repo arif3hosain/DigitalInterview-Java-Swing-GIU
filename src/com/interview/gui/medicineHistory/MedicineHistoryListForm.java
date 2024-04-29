@@ -1,9 +1,9 @@
-package com.interview.model.gui.medicineHistory;
+package com.interview.gui.medicineHistory;
 
 
-import DBUtils.DBConnection;
-import com.interview.model.gui.patient.AddPatient;
-import com.interview.model.gui.patient.EditPatient;
+import com.interview.DBUtils.DBConnection;
+import com.interview.model.gui.medicineHistory.AddMedicalHistoryDialog;
+import com.interview.model.gui.medicineHistory.UpdateMedicalHistoryDialog;
 import com.interview.model.gui.patient.PatientInfoGUI;
 
 import javax.swing.*;
@@ -80,7 +80,7 @@ public class MedicineHistoryListForm extends JFrame {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddMedicalHistoryDialog dialog = new AddMedicalHistoryDialog(MedicineHistoryListForm.this, patientId);
+                com.interview.model.gui.medicineHistory.AddMedicalHistoryDialog dialog = new AddMedicalHistoryDialog(MedicineHistoryListForm.this, patientId);
                 dialog.setVisible(true);
                 fetchPatientDataFromDatabase();
             }
@@ -91,7 +91,7 @@ public class MedicineHistoryListForm extends JFrame {
                 int[] selectedRows = patientTable.getSelectedRows();
                 if (selectedRows.length > 0) {
                     String id = patientTable.getValueAt(selectedRows[0],0).toString();
-                    UpdateMedicalHistoryDialog dialog = new UpdateMedicalHistoryDialog(MedicineHistoryListForm.this, id);
+                    com.interview.model.gui.medicineHistory.UpdateMedicalHistoryDialog dialog = new UpdateMedicalHistoryDialog(MedicineHistoryListForm.this, id);
                     dialog.setVisible(true);
                     fetchPatientDataFromDatabase();
                 } else {

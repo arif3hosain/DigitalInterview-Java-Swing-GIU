@@ -1,6 +1,7 @@
-package com.interview.model.gui.allergy;
+package com.interview.gui.allergy;
 
-import DBUtils.DBConnection;
+import com.interview.DBUtils.DBConnection;
+import com.interview.other.Msg;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -276,10 +277,10 @@ class AddAllergyDialog extends JDialog {
                 statement.setString(5, description);
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, "Allergy saved/updated successfully.");
+                JOptionPane.showMessageDialog(this, Msg.Save);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to save/update allergy.");
+                JOptionPane.showMessageDialog(this, Msg.Save_Failure);
             }
             statement.close();
             connection.close();
@@ -393,10 +394,10 @@ class EditAllergyDialog extends JDialog {
             statement.setInt(5, allergyIDToUpdate);
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, );
+                JOptionPane.showMessageDialog(this, Msg.Update);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to update allergy.");
+                JOptionPane.showMessageDialog(this, Msg.Update_Failure);
             }
             statement.close();
             connection.close();

@@ -1,6 +1,7 @@
-package com.interview.model.gui.familyhistory;
+package com.interview.gui.familyhistory;
 
-import DBUtils.DBConnection;
+import com.interview.DBUtils.DBConnection;
+import com.interview.other.Msg;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -282,7 +283,7 @@ class AddFamilyHistoryDialog extends JDialog {
                 } else {
                     JOptionPane.showMessageDialog(AddFamilyHistoryDialog.this,
                             "Name and Relation fields are required.",
-                            "Validation Error",
+                            "com.interview.Validation Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -323,10 +324,10 @@ class AddFamilyHistoryDialog extends JDialog {
             stmt.setBoolean(8, disorderHRFCheckBox.isSelected());
             int affectedRows =  stmt.executeUpdate();
             if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, "Family history saved successfully.");
+                JOptionPane.showMessageDialog(this, Msg.Save);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to save history.");
+                JOptionPane.showMessageDialog(this, Msg.Save_Failure);
             }
 
 
@@ -437,7 +438,7 @@ class UpdateFamilyHistoryDialog extends JDialog {
                 } else {
                     JOptionPane.showMessageDialog(UpdateFamilyHistoryDialog.this,
                             "Name and Relation fields are required.",
-                            "Validation Error",
+                            "com.interview.Validation Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -467,7 +468,6 @@ e.printStackTrace();
     }
     private void updateFamilyHistory() {
         try {
-            // Connect to your database (replace 'url', 'user', and 'password' with your actual database credentials)
             Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement("UPDATE familyhistory SET Name=?, Relation=?, Alive=?, Lives_with_patient=?, MajorDisorder=?, SpecificTypeDisorder=?, DisorderHRF=? WHERE FamilyID=?");
 
@@ -484,13 +484,11 @@ e.printStackTrace();
             // Execute the statement
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, Msg);
+                JOptionPane.showMessageDialog(this, Msg.Update);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to update allergy.");
+                JOptionPane.showMessageDialog(this, Msg.Update_Failure);
             }
-
-
             // Close resources
             stmt.close();
             conn.close();
@@ -499,122 +497,4 @@ e.printStackTrace();
             // Handle any potential errors here
         }
     }
-
 }
-/*
-class EditAllergyDialog extends JDialog {
-    private JTextField allergenField;
-    private JDateChooser allergyStartDate;
-    private JDateChooser allergyEndDate;
-    private JTextField descriptionField;
-
-    private JButton updateButton;
-    private JButton cancelButton;
-
-    private int allergyIDToUpdate;
-
-    public EditAllergyDialog(Frame parent, int id) {
-        super(parent, "Update History", true);
-        setSize(300, 200);
-        allergyIDToUpdate =id;
-        // Initialize components
-        initializeComponents();
-
-        // Add components to the dialog
-        addComponentsToDialog();
-        loadAllergyData();
-        setLocationRelativeTo(parent);
-    }
-
-    private void initializeComponents() {
-        allergenField = new JTextField(20);
-        allergyStartDate = new JDateChooser();
-        allergyEndDate = new JDateChooser();
-        descriptionField = new JTextField(20);
-
-        updateButton = new JButton("Update");
-        updateButton.addActionListener(e -> updateAllergy());
-
-        cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> dispose());
-    }
-
-    private void addComponentsToDialog() {
-        JPanel panel = new JPanel(new GridLayout(5, 2));
-        panel.add(new JLabel("Allergen:"));
-        panel.add(allergenField);
-        panel.add(new JLabel("Start Date:"));
-        panel.add(allergyStartDate);
-        panel.add(new JLabel("End Date:"));
-        panel.add(allergyEndDate);
-        panel.add(new JLabel("Description:"));
-        panel.add(descriptionField);
-        panel.add(updateButton);
-        panel.add(cancelButton);
-
-        add(panel);
-    }
-
-    private void loadAllergyData() {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String sql = "SELECT Allergen, AllergyStartDate, AllergyEndDate, AllergyDescription FROM FamilyHistory WHERE AllergyID = ?";
-            System.out.println(sql);
-            System.out.println(allergyIDToUpdate);
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, allergyIDToUpdate);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                allergenField.setText(resultSet.getString("Allergen"));
-
-                java.util.Date startDate = new java.util.Date(resultSet.getDate("AllergyStartDate").getTime());
-                java.util.Date endDate = new java.util.Date(resultSet.getDate("AllergyEndDate").getTime());
-                allergyStartDate.setDate(startDate);
-                allergyEndDate.setDate(endDate);
-                descriptionField.setText(resultSet.getString("AllergyDescription"));
-            }
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-        }
-    }
-
-    private void updateAllergy() {
-        String allergen = allergenField.getText();
-        java.util.Date startDate = allergyStartDate.getDate();
-        java.util.Date endDate = allergyEndDate.getDate();
-
-        // Check if required fields are empty
-        if (allergen.isEmpty() || startDate == null || endDate == null) {
-            JOptionPane.showMessageDialog(this, "Allergen, Start Date, and End Date are required fields.");
-            return; // Don't proceed with saving/updating
-        }
-         String description = descriptionField.getText();
-
-        try {
-            Connection connection =  DBConnection.getConnection();
-            String sql = "UPDATE FamilyHistory SET Allergen = ?, AllergyStartDate = ?, AllergyEndDate = ?, AllergyDescription = ? WHERE AllergyID = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, allergen);
-            statement.setDate(2, new java.sql.Date(allergyStartDate.getDate().getTime()));
-            statement.setDate(3, new java.sql.Date(allergyEndDate.getDate().getTime()));
-            statement.setString(4, description);
-            statement.setInt(5, allergyIDToUpdate);
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, "Allergy updated successfully.");
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to update allergy.");
-            }
-            statement.close();
-            connection.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-        }
-    }
-}*/

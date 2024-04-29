@@ -1,4 +1,4 @@
-package DBUtils;
+package com.interview.DBUtils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
