@@ -61,6 +61,7 @@ public class App extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                fetchPatientDataFromDatabase();
                 String searchTerm = searchField.getText().trim().toLowerCase();
                 if (!searchTerm.isEmpty()) {
                     // Filter patient list based on search term
