@@ -30,7 +30,12 @@ public class PatientListForm extends JFrame {
         setSize(800, 400);
 
         // Create table model
-        tableModel = new DefaultTableModel();
+        tableModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tableModel.addColumn("Patient ID");
         tableModel.addColumn("Last Name");
         tableModel.addColumn("Previous Last Name");

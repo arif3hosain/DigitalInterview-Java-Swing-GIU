@@ -31,7 +31,12 @@ public class MedicineHistoryListForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 400);
 
-        tableModel = new DefaultTableModel();
+        tableModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         for (String columnName : columnNames) {
             tableModel.addColumn(columnName);
         }

@@ -54,7 +54,13 @@ public class AllergyHistoryForm extends JFrame {
         allergyTable = new JTable(new DefaultTableModel(
                 new Object[][]{},
                 new String[]{"Allergy ID", "Allergen", "Start Date", "End Date", "Description"}
-        ));
+        )) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // This will make all cells non-editable
+            }
+        };
+        allergyTable.setDefaultEditor(Object.class, null); // Set the default editor to null to make the table non-editable
 
         // Initialize Buttons
         addButton = new JButton("Add");
@@ -387,7 +393,7 @@ class EditAllergyDialog extends JDialog {
             statement.setInt(5, allergyIDToUpdate);
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, "Allergy updated successfully.");
+                JOptionPane.showMessageDialog(this, );
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to update allergy.");
