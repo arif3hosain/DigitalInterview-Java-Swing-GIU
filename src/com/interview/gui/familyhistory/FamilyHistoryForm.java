@@ -223,49 +223,49 @@ class AddFamilyHistoryDialog extends JDialog {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        panel.add(new JLabel("Name:"), gbc);
+        panel.add(new JLabel("Name*"), gbc);
         gbc.gridx++;
         nameField = new JTextField(20);
         panel.add(nameField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        panel.add(new JLabel("Relation:"), gbc);
+        panel.add(new JLabel("Relation*"), gbc);
         gbc.gridx++;
         relationField = new JTextField(20);
         panel.add(relationField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        panel.add(new JLabel("Major Disorder:"), gbc);
+        panel.add(new JLabel("Major Disorder"), gbc);
         gbc.gridx++;
         majorDisorderField = new JTextField(20);
         panel.add(majorDisorderField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        panel.add(new JLabel("Specific Type Disorder:"), gbc);
+        panel.add(new JLabel("Specific Type Disorder"), gbc);
         gbc.gridx++;
         specificTypeDisorderField = new JTextField(20);
         panel.add(specificTypeDisorderField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        panel.add(new JLabel("Alive:"), gbc);
+        panel.add(new JLabel("Alive"), gbc);
         gbc.gridx++;
         aliveCheckBox = new JCheckBox();
         panel.add(aliveCheckBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        panel.add(new JLabel("Lives with Patient:"), gbc);
+        panel.add(new JLabel("Lives with Patient"), gbc);
         gbc.gridx++;
         livesWithPatientCheckBox = new JCheckBox();
         panel.add(livesWithPatientCheckBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        panel.add(new JLabel("Disorder HRF:"), gbc);
+        panel.add(new JLabel("Disorder HRF"), gbc);
         gbc.gridx++;
         disorderHRFCheckBox = new JCheckBox();
         panel.add(disorderHRFCheckBox, gbc);
@@ -370,35 +370,35 @@ class UpdateFamilyHistoryDialog extends JDialog {
         gbc.insets = new Insets(5, 5, 5, 5);
 
             if (rs.next()) {
-                panel.add(new JLabel("Name:"), gbc);
+                panel.add(new JLabel("Name*"), gbc);
                 gbc.gridx++;
                 nameField = new JTextField(rs.getString("Name"), 20);
                 panel.add(nameField, gbc);
 
                 gbc.gridx = 0;
                 gbc.gridy++;
-                panel.add(new JLabel("Relation:"), gbc);
+                panel.add(new JLabel("Relation*"), gbc);
                 gbc.gridx++;
                 relationField = new JTextField(rs.getString("Relation"), 20);
                 panel.add(relationField, gbc);
 
                 gbc.gridx = 0;
                 gbc.gridy++;
-                panel.add(new JLabel("Major Disorder:"), gbc);
+                panel.add(new JLabel("Major Disorder"), gbc);
                 gbc.gridx++;
                 majorDisorderField = new JTextField(rs.getString("MajorDisorder"), 20);
                 panel.add(majorDisorderField, gbc);
 
                 gbc.gridx = 0;
                 gbc.gridy++;
-                panel.add(new JLabel("Specific Type Disorder:"), gbc);
+                panel.add(new JLabel("Specific Type Disorder"), gbc);
                 gbc.gridx++;
                 specificTypeDisorderField = new JTextField(rs.getString("SpecificTypeDisorder"), 20);
                 panel.add(specificTypeDisorderField, gbc);
 
                 gbc.gridx = 0;
                 gbc.gridy++;
-                panel.add(new JLabel("Alive:"), gbc);
+                panel.add(new JLabel("Alive"), gbc);
                 gbc.gridx++;
                 aliveCheckBox = new JCheckBox();
                 aliveCheckBox.setSelected(rs.getBoolean("Alive"));
@@ -406,7 +406,7 @@ class UpdateFamilyHistoryDialog extends JDialog {
 
                 gbc.gridx = 0;
                 gbc.gridy++;
-                panel.add(new JLabel("Lives with Patient:"), gbc);
+                panel.add(new JLabel("Lives with Patient"), gbc);
                 gbc.gridx++;
                 livesWithPatientCheckBox = new JCheckBox();
                 livesWithPatientCheckBox.setSelected(rs.getBoolean("Lives_with_patient"));
@@ -414,7 +414,7 @@ class UpdateFamilyHistoryDialog extends JDialog {
 
                 gbc.gridx = 0;
                 gbc.gridy++;
-                panel.add(new JLabel("Disorder HRF:"), gbc);
+                panel.add(new JLabel("Disorder HRF"), gbc);
                 gbc.gridx++;
                 disorderHRFCheckBox = new JCheckBox();
                 disorderHRFCheckBox.setSelected(rs.getBoolean("DisorderHRF"));

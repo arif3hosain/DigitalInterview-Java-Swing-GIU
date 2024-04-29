@@ -100,7 +100,7 @@ public class UpdateMedicalHistoryDialog extends JDialog {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error" + e.getMessage());
         }
     }
 
@@ -111,27 +111,27 @@ public class UpdateMedicalHistoryDialog extends JDialog {
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(15, 2));
-        mainPanel.add(new JLabel("Tobacco: "));
+        mainPanel.add(new JLabel("Tobacco"));
         mainPanel.add(tobaccoField);
-        mainPanel.add(new JLabel("Tobacco Quantity: "));
+        mainPanel.add(new JLabel("Tobacco Quantity"));
         mainPanel.add(tobaccoQuantityField);
-        mainPanel.add(new JLabel("Tobacco Duration: "));
+        mainPanel.add(new JLabel("Tobacco Duration"));
         mainPanel.add(tobaccoDurationField);
-        mainPanel.add(new JLabel("Alcohol: "));
+        mainPanel.add(new JLabel("Alcohol"));
         mainPanel.add(alcoholField);
-        mainPanel.add(new JLabel("Alcohol Quantity: "));
+        mainPanel.add(new JLabel("Alcohol Quantity"));
         mainPanel.add(alcoholQuantityField);
-        mainPanel.add(new JLabel("Alcohol Duration: "));
+        mainPanel.add(new JLabel("Alcohol Duration"));
         mainPanel.add(alcoholDurationField);
-        mainPanel.add(new JLabel("Drug: "));
+        mainPanel.add(new JLabel("Drug"));
         mainPanel.add(drugField);
-        mainPanel.add(new JLabel("Drug Type: "));
+        mainPanel.add(new JLabel("Drug Type"));
         mainPanel.add(drugTypeField);
-        mainPanel.add(new JLabel("Drug Duration: "));
+        mainPanel.add(new JLabel("Drug Duration"));
         mainPanel.add(drugDurationField);
-        mainPanel.add(new JLabel("Blood Type: "));
+        mainPanel.add(new JLabel("Blood Type*"));
         mainPanel.add(bloodTypeCombo);
-        mainPanel.add(new JLabel("Rh: "));
+        mainPanel.add(new JLabel("Rh*"));
         mainPanel.add(rhCombo);
         mainPanel.add(buttonPanel);
 
@@ -171,7 +171,7 @@ public class UpdateMedicalHistoryDialog extends JDialog {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error" + e.getMessage());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid Patient ID. Please enter a valid number.");
         }

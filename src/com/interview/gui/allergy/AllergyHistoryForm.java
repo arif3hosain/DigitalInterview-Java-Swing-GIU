@@ -238,13 +238,13 @@ class AddAllergyDialog extends JDialog {
 
     private void addComponentsToDialog() {
         JPanel panel = new JPanel(new GridLayout(5, 2));
-        panel.add(new JLabel("Allergen:"));
+        panel.add(new JLabel("Allergen"));
         panel.add(allergenField);
-        panel.add(new JLabel("Start Date:"));
+        panel.add(new JLabel("Start Date*"));
         panel.add(allergyStartDate);
-        panel.add(new JLabel("End Date:"));
+        panel.add(new JLabel("End Date*"));
         panel.add(allergyEndDate);
-        panel.add(new JLabel("Description:"));
+        panel.add(new JLabel("Description"));
         panel.add(descriptionField);
         panel.add(saveButton);
         panel.add(cancelButton);
@@ -330,13 +330,13 @@ class EditAllergyDialog extends JDialog {
 
     private void addComponentsToDialog() {
         JPanel panel = new JPanel(new GridLayout(5, 2));
-        panel.add(new JLabel("Allergen:"));
+        panel.add(new JLabel("Allergen"));
         panel.add(allergenField);
-        panel.add(new JLabel("Start Date:"));
+        panel.add(new JLabel("Start Date*"));
         panel.add(allergyStartDate);
-        panel.add(new JLabel("End Date:"));
+        panel.add(new JLabel("End Date*"));
         panel.add(allergyEndDate);
-        panel.add(new JLabel("Description:"));
+        panel.add(new JLabel("Description"));
         panel.add(descriptionField);
         panel.add(updateButton);
         panel.add(cancelButton);
@@ -348,8 +348,6 @@ class EditAllergyDialog extends JDialog {
         try {
             Connection connection = DBConnection.getConnection();
             String sql = "SELECT Allergen, AllergyStartDate, AllergyEndDate, AllergyDescription FROM allergyhistory WHERE AllergyID = ?";
-            System.out.println(sql);
-            System.out.println(allergyIDToUpdate);
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, allergyIDToUpdate);
             ResultSet resultSet = statement.executeQuery();

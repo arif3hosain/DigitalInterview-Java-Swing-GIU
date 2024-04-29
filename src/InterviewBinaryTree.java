@@ -1,6 +1,4 @@
 /**
- * Created by: arif hosain
- * Mail: arif@innoweb.co
  * Created at : 4/26/2024
  */
 class BinaryTreeNode {

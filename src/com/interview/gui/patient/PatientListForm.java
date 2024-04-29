@@ -1,12 +1,11 @@
-package com.interview.model.gui.patient;
+package com.interview.gui.patient;
 
 /**
- * Created by: arif hosain
- * Mail: arif@innoweb.co
  * Created at : 4/27/2024
  */
 
 import com.interview.DBUtils.DBConnection;
+import com.interview.gui.patient.AddPatient;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -112,8 +111,7 @@ public class PatientListForm extends JFrame {
 
                 if (selectedRows.length > 0) {
                     String patientID = patientTable.getValueAt(selectedRows[0],0).toString();
-                    System.out.println(patientID);
-                    EditPatient editPatientDialog = new EditPatient(PatientListForm.this,patientID );
+                    com.interview.gui.patient.EditPatient editPatientDialog = new com.interview.gui.patient.EditPatient(PatientListForm.this,patientID );
                     editPatientDialog.setVisible(true);
                     fetchPatientDataFromDatabase();
                 } else {
@@ -134,7 +132,7 @@ public class PatientListForm extends JFrame {
                     for (int i = 0; i < selectedRows.length; i++) {
                         selectedPatients[i] = (String) patientTable.getValueAt(selectedRows[i], 0);
                     }
-                    new PatientInfoGUI (selectedPatients).setVisible(true);
+                    new com.interview.model.gui.patient.PatientInfoGUI(selectedPatients).setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(PatientListForm.this,
                             "Please select at least one patient.",

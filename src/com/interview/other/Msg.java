@@ -1,8 +1,6 @@
 package com.interview.other;
 
 /**
- * Created by: arif hosain
- * Mail: arif@innoweb.co
  * Created at : 4/29/2024
  */
 public class Msg {

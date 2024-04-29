@@ -45,90 +45,90 @@ public class AddPatient extends JDialog {
         JPanel panel = new JPanel(new GridLayout(0, 2));
         add(panel);
 
-        panel.add(new JLabel("Last Name:"));
+        panel.add(new JLabel("Last Nam*e"));
         lastNameField = new JTextField();
         panel.add(lastNameField);
 
-        panel.add(new JLabel("Previous Last Name:"));
+        panel.add(new JLabel("Previous Last Name"));
         prevLastNameField = new JTextField();
         panel.add(prevLastNameField);
 
-        panel.add(new JLabel("First Name:"));
+        panel.add(new JLabel("First Name*"));
         firstNameField = new JTextField();
         panel.add(firstNameField);
 
-        panel.add(new JLabel("Home Address:"));
+        panel.add(new JLabel("Home Address"));
         homeAddressField = new JTextField();
         panel.add(homeAddressField);
 
-        panel.add(new JLabel("Home City:"));
+        panel.add(new JLabel("Home City"));
         homeCityField = new JTextField();
         panel.add(homeCityField);
 
-        panel.add(new JLabel("Home State/Province/Region:"));
+        panel.add(new JLabel("Home State/Province/Region"));
         homeStateField = new JTextField();
         panel.add(homeStateField);
 
-        panel.add(new JLabel("Home Zip:"));
+        panel.add(new JLabel("Home Zip"));
         homeZipField = new JTextField();
         panel.add(homeZipField);
 
-        panel.add(new JLabel("Country:"));
+        panel.add(new JLabel("Country"));
         countryField = new JTextField();
         panel.add(countryField);
 
-        panel.add(new JLabel("Citizenship:"));
+        panel.add(new JLabel("Citizenship"));
         citizenshipField = new JTextField();
         panel.add(citizenshipField);
 
-        panel.add(new JLabel("Mobile Phone:"));
+        panel.add(new JLabel("Mobile Phone"));
         mobilePhoneField = new JTextField();
         panel.add(mobilePhoneField);
 
-        panel.add(new JLabel("Emergency Phone:"));
+        panel.add(new JLabel("Emergency Phone"));
         emergencyPhoneField = new JTextField();
         panel.add(emergencyPhoneField);
 
-        panel.add(new JLabel("Email Address:"));
+        panel.add(new JLabel("Email Address"));
         emailField = new JTextField();
         panel.add(emailField);
 
-        panel.add(new JLabel("SSN:"));
+        panel.add(new JLabel("SSN"));
         ssnField = new JTextField();
         panel.add(ssnField);
 
-        panel.add(new JLabel("Date of Birth:"));
+        panel.add(new JLabel("Date of Birth"));
         dobPicker = new JDateChooser(); // Date picker for DOB
         panel.add(dobPicker);
 
-        panel.add(new JLabel("Gender:"));
+        panel.add(new JLabel("Gender"));
         genderComboBox = new JComboBox<>(new String[]{"Male", "Female"}); // Combo box for gender
         panel.add(genderComboBox);
 
         JButton saveButton = new JButton("Save");
         panel.add(saveButton);
 
-        panel.add(new JLabel("Ethnic Association:"));
+        panel.add(new JLabel("Ethnic Association"));
         ethnicField = new JTextField();
         panel.add(ethnicField);
 
-        panel.add(new JLabel("Marital Status:"));
+        panel.add(new JLabel("Marital Status"));
         maritalStatusField = new JComboBox<>(new String[]{"Married", "Single"}); // Combo box for gender
         panel.add(maritalStatusField);
 
-        panel.add(new JLabel("Current Primary HCP:"));
+        panel.add(new JLabel("Current Primary HCP"));
         primaryHCPField = new JTextField();
         panel.add(primaryHCPField);
 
-        panel.add(new JLabel("Comments:"));
+        panel.add(new JLabel("Comments"));
         commentsField = new JTextField();
         panel.add(commentsField);
 
-        panel.add(new JLabel("Next of Kin:"));
+        panel.add(new JLabel("Next of Kin"));
         nextOfKinField = new JTextField();
         panel.add(nextOfKinField);
 
-        panel.add(new JLabel("Next of Kin Relationship:"));
+        panel.add(new JLabel("Next of Kin Relationship"));
         nextOfKinRelationshipField = new JTextField();
         panel.add(nextOfKinRelationshipField);
 
