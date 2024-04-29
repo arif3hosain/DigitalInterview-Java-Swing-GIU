@@ -202,11 +202,11 @@ public class AllergyHistoryForm extends JFrame {
 }
 
 class AddAllergyDialog extends JDialog {
+
     private JTextField allergenField;
     private JDateChooser allergyStartDate;
     private JDateChooser  allergyEndDate;
     private JTextField descriptionField;
-
     private JButton saveButton;
     private JButton cancelButton;
 
@@ -248,7 +248,6 @@ class AddAllergyDialog extends JDialog {
         panel.add(descriptionField);
         panel.add(saveButton);
         panel.add(cancelButton);
-
         add(panel);
     }
 
