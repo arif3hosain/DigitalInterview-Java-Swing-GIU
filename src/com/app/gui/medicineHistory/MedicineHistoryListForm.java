@@ -1,10 +1,10 @@
-package com.interview.gui.medicineHistory;
+package com.app.gui.medicineHistory;
 
 
-import com.interview.DBUtils.DBConnection;
-import com.interview.model.gui.medicineHistory.AddMedicalHistoryDialog;
-import com.interview.model.gui.medicineHistory.UpdateMedicalHistoryDialog;
-import com.interview.model.gui.patient.PatientInfoGUI;
+import com.app.DBUtils.DBConnection;
+import com.app.model.gui.medicineHistory.AddMedicalHistoryDialog;
+import com.app.model.gui.medicineHistory.UpdateMedicalHistoryDialog;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -80,7 +80,7 @@ public class MedicineHistoryListForm extends JFrame {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                com.interview.model.gui.medicineHistory.AddMedicalHistoryDialog dialog = new AddMedicalHistoryDialog(MedicineHistoryListForm.this, patientId);
+                com.app.model.gui.medicineHistory.AddMedicalHistoryDialog dialog = new AddMedicalHistoryDialog(MedicineHistoryListForm.this, patientId);
                 dialog.setVisible(true);
                 fetchPatientDataFromDatabase();
             }
@@ -91,7 +91,7 @@ public class MedicineHistoryListForm extends JFrame {
                 int[] selectedRows = patientTable.getSelectedRows();
                 if (selectedRows.length > 0) {
                     String id = patientTable.getValueAt(selectedRows[0],0).toString();
-                    com.interview.model.gui.medicineHistory.UpdateMedicalHistoryDialog dialog = new UpdateMedicalHistoryDialog(MedicineHistoryListForm.this, id);
+                    com.app.model.gui.medicineHistory.UpdateMedicalHistoryDialog dialog = new UpdateMedicalHistoryDialog(MedicineHistoryListForm.this, id);
                     dialog.setVisible(true);
                     fetchPatientDataFromDatabase();
                 } else {
@@ -112,7 +112,7 @@ public class MedicineHistoryListForm extends JFrame {
                     for (int i = 0; i < selectedRows.length; i++) {
                         selectedPatients[i] = (String) patientTable.getValueAt(selectedRows[i], 0);
                     }
-                    new PatientInfoGUI(selectedPatients).setVisible(true);
+                   // new PatientInfoGUI(selectedPatients).setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(MedicineHistoryListForm.this,
                             "Please select at least one patient.",

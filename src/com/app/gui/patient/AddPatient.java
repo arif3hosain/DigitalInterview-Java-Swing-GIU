@@ -1,8 +1,8 @@
-package com.interview.gui.patient;
+package com.app.gui.patient;
 
 
-import com.interview.DBUtils.DBConnection;
-import com.interview.other.Msg;
+import com.app.DBUtils.DBConnection;
+import com.app.other.Msg;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -45,7 +45,7 @@ public class AddPatient extends JDialog {
         JPanel panel = new JPanel(new GridLayout(0, 2));
         add(panel);
 
-        panel.add(new JLabel("Last Nam*e"));
+        panel.add(new JLabel("Last Name*"));
         lastNameField = new JTextField();
         panel.add(lastNameField);
 

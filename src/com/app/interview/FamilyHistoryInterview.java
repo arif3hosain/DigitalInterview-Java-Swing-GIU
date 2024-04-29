@@ -1,4 +1,4 @@
-/**
+package com.app.interview; /**
  * Created by: arif hosain
  * Mail: arif@innoweb.co
  * Created at : 4/29/2024
@@ -19,7 +19,7 @@ public class FamilyHistoryInterview {
     private TreeNode root;
 
     public FamilyHistoryInterview() {
-        // Build the binary tree for the interview
+        // Build the binary tree for the app
         buildTree();
     }
 
@@ -40,16 +40,16 @@ public class FamilyHistoryInterview {
         root.noNode.noNode.noNode.noNode = new TreeNode("Is there any other relevant family medical history information that you think is important to mention?");
     }
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new FamilyHistoryInterview().startInterview());
-    }
+    }*/
 
-    private void startInterview() {
+    public void startInterview() {
         TreeNode currentNode = root;
         while (currentNode != null) {
             String answer = JOptionPane.showInputDialog(null, currentNode.question, "Family History Interview", JOptionPane.QUESTION_MESSAGE);
             if (answer == null) {
-                // User cancelled the interview
+                // User cancelled the app
                 JOptionPane.showMessageDialog(null, "Interview cancelled.");
                 return;
             }
@@ -62,7 +62,7 @@ public class FamilyHistoryInterview {
                 JOptionPane.showMessageDialog(null, "Please answer with 'yes' or 'no'.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             }
         }
-        // End of interview
-        JOptionPane.showMessageDialog(null, "End of interview. Thank you!");
+        // End of app
+        JOptionPane.showMessageDialog(null, "End of app. Thank you!");
     }
 }

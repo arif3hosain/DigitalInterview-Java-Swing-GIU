@@ -1,6 +1,6 @@
-package com.interview.model.gui.medicineHistory;
+package com.app.model.gui.medicineHistory;
 
-import com.interview.DBUtils.DBConnection;
+import com.app.DBUtils.DBConnection;
 
 import javax.swing.*;
 import java.awt.*;

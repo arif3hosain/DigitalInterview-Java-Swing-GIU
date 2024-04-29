@@ -1,7 +1,7 @@
-package com.interview.gui.allergy;
+package com.app.gui.allergy;
 
-import com.interview.DBUtils.DBConnection;
-import com.interview.other.Msg;
+import com.app.DBUtils.DBConnection;
+import com.app.other.Msg;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;

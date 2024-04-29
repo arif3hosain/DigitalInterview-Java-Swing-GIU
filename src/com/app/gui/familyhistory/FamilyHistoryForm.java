@@ -1,7 +1,10 @@
-package com.interview.gui.familyhistory;
+package com.app.gui.familyhistory;
 
-import com.interview.DBUtils.DBConnection;
-import com.interview.other.Msg;
+import com.app.App;
+import com.app.DBUtils.DBConnection;
+import com.app.gui.patient.PatientListGUI;
+import com.app.interview.FamilyHistoryInterview;
+import com.app.other.Msg;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,11 +22,12 @@ public class FamilyHistoryForm extends JFrame {
     private JButton addButton;
     private JButton editButton;
     private JButton deleteButton;
-    int patientId = 1;
+
+    private JButton startInterview; // New button
 
     public FamilyHistoryForm() {
         setTitle("Family History Form");
-        setSize(600, 400);
+        setSize(800, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Initialize components
@@ -62,8 +66,10 @@ public class FamilyHistoryForm extends JFrame {
         addButton = new JButton("Add");
         editButton = new JButton("Edit");
         deleteButton = new JButton("Delete");
+        deleteButton = new JButton("Delete");
+        startInterview = new JButton("Start Interview");
 
-        fetchDataFromDatabase(patientId);
+        fetchDataFromDatabase();
 
         // Add listeners to buttons
         addButton.addActionListener(e -> showAddDialog());
@@ -74,7 +80,7 @@ public class FamilyHistoryForm extends JFrame {
                 if (selectedRows.length > 0) {
                     String FamilyHistoryId = table.getValueAt(selectedRows[0], 0).toString();
                     showEditDialog(Integer.parseInt(FamilyHistoryId));
-                    fetchDataFromDatabase(patientId);
+                    fetchDataFromDatabase();
                 } else {
                     JOptionPane.showMessageDialog(FamilyHistoryForm.this,
                             "Please select at least one Item.",
@@ -83,17 +89,55 @@ public class FamilyHistoryForm extends JFrame {
                 }
             }
         });
-        deleteButton.addActionListener(e -> deleteSelectedAllergy());
+        startInterview.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> new FamilyHistoryInterview().startInterview());
+            }
+        });
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int[] selectedRows = table.getSelectedRows();
+                if (selectedRows.length > 0) {
+                    String familyHistoryId = table.getValueAt(selectedRows[0], 0).toString();
+                    removePatient(Integer.parseInt(familyHistoryId));
+                   fetchDataFromDatabase();
+                } else {
+                    JOptionPane.showMessageDialog(FamilyHistoryForm.this,
+                            "Please select at least one patient.",
+                            "No Patient Selected",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
     }
+    private void removePatient(int familyHistoryId) {
 
-    private void fetchDataFromDatabase(int patientID) {
+        String sql = "DELETE FROM familyhistory WHERE FamilyID = ?";
         try {
-            // Connect to your database (replace 'url', 'user', and 'password' with your actual database credentials)
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            // Set the value of the parameter in the PreparedStatement
+            pstmt.setInt(1, familyHistoryId);
+            int rowsAffected = pstmt.executeUpdate();
+            // Check if any rows were affected (patient deleted)
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, Msg.Delete, "Delete Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, Msg.Loading_failure, "Delete Failed", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private void fetchDataFromDatabase() {
+        try {
             Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM familyhistory WHERE PatientID = ?");
-            stmt.setInt(1, patientID);
+            stmt.setInt(1, App.SELECTED_PATIENT_ID);
             ResultSet rs = stmt.executeQuery();
-
+            model.setRowCount(0);
             while (rs.next()) {
                 Object[] row = {
                         rs.getInt("FamilyID"),
@@ -115,68 +159,10 @@ public class FamilyHistoryForm extends JFrame {
             e.printStackTrace();
         }
     }
-
-    private void populatetable(int patientID, String allergen) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0); // Clear previous data
-
-        try {
-            Connection connection = DBConnection.getConnection();
-            String sql = "SELECT AllergyID, Allergen, AllergyStartDate, AllergyEndDate, AllergyDescription FROM FamilyHistory WHERE PatientID = ? AND Allergen = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, patientID);
-            statement.setString(2, allergen);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int allergyID = resultSet.getInt("AllergyID");
-                String startDate = resultSet.getString("AllergyStartDate");
-                String endDate = resultSet.getString("AllergyEndDate");
-                String description = resultSet.getString("AllergyDescription");
-                model.addRow(new Object[]{allergyID, allergen, startDate, endDate, description});
-            }
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
-    }
-
-    private void updateHistoryList(int patientID, int historyId) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0); // Clear previous data
-
-        try {
-            Connection connection = DBConnection.getConnection();
-            String sql = "SELECT * FROM familyhistory WHERE PatientID = ? AND FamilyID = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, patientID);
-            statement.setInt(2, historyId);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int allergyID = resultSet.getInt("AllergyID");
-                String startDate = resultSet.getString("AllergyStartDate");
-                String endDate = resultSet.getString("AllergyEndDate");
-                String description = resultSet.getString("AllergyDescription");
-                String Allergen = resultSet.getString("Allergen");
-                model.addRow(new Object[]{allergyID, Allergen, startDate, endDate, description});
-            }
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
-    }
-
     private void showAddDialog() {
         AddFamilyHistoryDialog dialog = new AddFamilyHistoryDialog(this);
         dialog.setVisible(true);
-        fetchDataFromDatabase(patientId);
+        fetchDataFromDatabase();
     }
 
     private void showEditDialog(int id) {
@@ -184,19 +170,14 @@ public class FamilyHistoryForm extends JFrame {
         dialog.setVisible(true);
     }
 
-    private void deleteSelectedAllergy() {
-        // Implement delete functionality
-    }
-
     private void addComponentsToFrame() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
-
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
-
+        buttonPanel.add(startInterview);
         panel.add(buttonPanel, BorderLayout.SOUTH);
         add(panel);
     }
@@ -283,7 +264,7 @@ class AddFamilyHistoryDialog extends JDialog {
                 } else {
                     JOptionPane.showMessageDialog(AddFamilyHistoryDialog.this,
                             "Name and Relation fields are required.",
-                            "com.interview.Validation Error",
+                            "com.app.Validation Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -314,7 +295,7 @@ class AddFamilyHistoryDialog extends JDialog {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO familyhistory (PatientID, Name, Relation, Alive, Lives_with_patient, MajorDisorder, SpecificTypeDisorder, DisorderHRF) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
             // Set parameters for the prepared statement
-            stmt.setInt(1, 1); // Assuming PatientID is 1
+            stmt.setInt(1, App.SELECTED_PATIENT_ID); // Assuming PatientID is 1
             stmt.setString(2, nameField.getText());
             stmt.setString(3, relationField.getText());
             stmt.setBoolean(4, aliveCheckBox.isSelected());
@@ -357,8 +338,8 @@ class UpdateFamilyHistoryDialog extends JDialog {
 
         Connection conn = DBConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM familyhistory WHERE PatientID = ? AND FamilyID = ?");
-        stmt.setInt(1, 1);
-        stmt.setInt(2, 6);
+        stmt.setInt(1, App.SELECTED_PATIENT_ID);
+        stmt.setInt(2, id);
         ResultSet rs = stmt.executeQuery();
 
 
@@ -425,9 +406,6 @@ class UpdateFamilyHistoryDialog extends JDialog {
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 1;
-
-
-
         JButton saveButton = new JButton("Update");
         saveButton.addActionListener(new ActionListener() {
             @Override
@@ -438,7 +416,7 @@ class UpdateFamilyHistoryDialog extends JDialog {
                 } else {
                     JOptionPane.showMessageDialog(UpdateFamilyHistoryDialog.this,
                             "Name and Relation fields are required.",
-                            "com.interview.Validation Error",
+                            "com.app.Validation Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -458,7 +436,7 @@ class UpdateFamilyHistoryDialog extends JDialog {
         add(panel);
 
         }catch (SQLException e){
-e.printStackTrace();
+            e.printStackTrace();
         }
     }
     private boolean validateFields() {

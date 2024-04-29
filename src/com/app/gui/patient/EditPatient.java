@@ -1,7 +1,7 @@
-package com.interview.gui.patient;
+package com.app.gui.patient;
 
 
-import com.interview.DBUtils.DBConnection;
+import com.app.DBUtils.DBConnection;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.awt.*;

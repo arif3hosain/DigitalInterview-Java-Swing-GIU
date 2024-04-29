@@ -1,4 +1,4 @@
-package com.interview.DBUtils;
+package com.app.DBUtils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,10 +18,6 @@ public class DBConnection {
             // Establishing connection
             connection = getConnection();
             System.out.println("Connected to MySQL database.");
-
-            // Close the connection when done
-            // connection.close();
-            //System.out.println("Connection closed.");
         } catch (SQLException e) {
             System.err.println("Error connecting to MySQL database: " + e.getMessage());
         }

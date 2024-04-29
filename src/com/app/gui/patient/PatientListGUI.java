@@ -1,11 +1,14 @@
-package com.interview.gui.patient;
+package com.app.gui.patient;
 
 /**
  * Created at : 4/27/2024
  */
 
-import com.interview.DBUtils.DBConnection;
-import com.interview.gui.patient.AddPatient;
+import com.app.DBUtils.DBConnection;
+import com.app.App;
+import com.app.gui.familyhistory.FamilyHistoryForm;
+import com.app.interview.FamilyHistoryInterview;
+import com.app.other.Msg;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,18 +17,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class PatientListForm extends JFrame {
+public class PatientListGUI extends JFrame {
+    Connection conn = null;
+    Statement stmt = null;
+    ResultSet rs = null;
     private DefaultTableModel tableModel;
     private JTable patientTable;
-    private JTextField searchField;
-    private JButton searchButton;
     private JButton add; // New button
     private JButton edit; // New button
     private JButton delete; // New button
+    private JButton familyHistory; // New button
 
-    public PatientListForm() {
+    public PatientListGUI() {
         super("Patient List Form");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setSize(800, 400);
 
         // Create table model
@@ -66,10 +72,6 @@ public class PatientListForm extends JFrame {
 
         // Search panel
         JPanel searchPanel = new JPanel(new BorderLayout());
-        searchField = new JTextField();
-        searchPanel.add(searchField, BorderLayout.CENTER);
-        searchButton = new JButton("Search");
-        searchPanel.add(searchButton, BorderLayout.EAST);
         add(searchPanel, BorderLayout.NORTH);
 
         // View Patient Info button
@@ -86,19 +88,15 @@ public class PatientListForm extends JFrame {
         buttonPanel.add(delete);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add action listener for search button
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fetchPatientDataFromDatabase(); // Refresh patient table based on search term
-            }
-        });
+        familyHistory = new JButton("Family History");
+        buttonPanel.add(familyHistory);
+        add(buttonPanel, BorderLayout.SOUTH);
 
         // Add action listener for view Patient Info button
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddPatient addPatientDialog = new AddPatient(PatientListForm.this);
+                AddPatient addPatientDialog = new AddPatient(PatientListGUI.this);
                 addPatientDialog.setVisible(true);
                 fetchPatientDataFromDatabase();
             }
@@ -111,11 +109,11 @@ public class PatientListForm extends JFrame {
 
                 if (selectedRows.length > 0) {
                     String patientID = patientTable.getValueAt(selectedRows[0],0).toString();
-                    com.interview.gui.patient.EditPatient editPatientDialog = new com.interview.gui.patient.EditPatient(PatientListForm.this,patientID );
+                    com.app.gui.patient.EditPatient editPatientDialog = new com.app.gui.patient.EditPatient(PatientListGUI.this,patientID );
                     editPatientDialog.setVisible(true);
                     fetchPatientDataFromDatabase();
                 } else {
-                    JOptionPane.showMessageDialog(PatientListForm.this,
+                    JOptionPane.showMessageDialog(PatientListGUI.this,
                             "Please select at least one patient.",
                             "No Patient Selected",
                             JOptionPane.WARNING_MESSAGE);
@@ -127,18 +125,22 @@ public class PatientListForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int[] selectedRows = patientTable.getSelectedRows();
                 if (selectedRows.length > 0) {
-                    // Open new GUI with full information of selected patient(s)
-                    String[] selectedPatients = new String[selectedRows.length];
-                    for (int i = 0; i < selectedRows.length; i++) {
-                        selectedPatients[i] = (String) patientTable.getValueAt(selectedRows[i], 0);
-                    }
-                    new com.interview.model.gui.patient.PatientInfoGUI(selectedPatients).setVisible(true);
+                    removePatient();
+                    dispose();
+                    new App().setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(PatientListForm.this,
+                    JOptionPane.showMessageDialog(PatientListGUI.this,
                             "Please select at least one patient.",
                             "No Patient Selected",
                             JOptionPane.WARNING_MESSAGE);
                 }
+            }
+        });
+
+        familyHistory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FamilyHistoryForm().setVisible(true);
             }
         });
 
@@ -148,14 +150,11 @@ public class PatientListForm extends JFrame {
 
     // Method to fetch patient data from database
     private void fetchPatientDataFromDatabase() {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
         try {
             // Establish database connection (replace with your database details)
-            conn = DriverManager.getConnection(DBConnection.JDBC_URL, DBConnection.USERNAME, DBConnection.PASSWORD);
+            conn = DBConnection.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM patient");
+            rs = stmt.executeQuery("SELECT * FROM patient where PatientID ="+ App.SELECTED_PATIENT_ID);
 
             // Clear existing table data
             tableModel.setRowCount(0);
@@ -171,23 +170,32 @@ public class PatientListForm extends JFrame {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            // Close JDBC resources
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+        }
+    }
+
+    private void removePatient() {
+        String sql = "DELETE FROM patient WHERE PatientID = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            // Set the value of the parameter in the PreparedStatement
+            pstmt.setInt(1, App.SELECTED_PATIENT_ID);
+            int rowsAffected = pstmt.executeUpdate();
+            // Check if any rows were affected (patient deleted)
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, Msg.Delete, "Delete Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "No patient found with ID " +  App.SELECTED_PATIENT_ID + ".", "Delete Failed", JOptionPane.WARNING_MESSAGE);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            PatientListForm patientListForm = new PatientListForm();
-            patientListForm.setVisible(true);
-            patientListForm.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            PatientListGUI patientListGui = new PatientListGUI();
+            patientListGui.setVisible(true);
+            patientListGui.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         });
     }
