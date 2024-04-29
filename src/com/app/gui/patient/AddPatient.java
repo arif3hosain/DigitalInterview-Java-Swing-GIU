@@ -132,7 +132,6 @@ public class AddPatient extends JDialog {
         nextOfKinRelationshipField = new JTextField();
         panel.add(nextOfKinRelationshipField);
 
-//        JButton saveButton = new JButton("Save");
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -163,7 +162,7 @@ public class AddPatient extends JDialog {
         PreparedStatement pstmt = null;
         try {
             // Establish database connection (replace with your database details)
-            conn = DriverManager.getConnection(DBConnection.JDBC_URL, DBConnection.USERNAME, DBConnection.PASSWORD);
+            conn = DBConnection.getConnection();
 
             // Prepare SQL insert statement
             String sql = "INSERT INTO patient (PtLastName, PtPreviousLastName, PtFirstName, " +
@@ -196,7 +195,6 @@ public class AddPatient extends JDialog {
             pstmt.setString(19, commentsField.getText());
             pstmt.setString(20, nextOfKinField.getText());
             pstmt.setString(21, nextOfKinRelationshipField.getText());
-
             // Execute insert query
             pstmt.executeUpdate();
             JOptionPane.showMessageDialog(this, Msg.Save, "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -214,12 +212,5 @@ public class AddPatient extends JDialog {
             }
         }
         dispose();
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AddPatient dialog = new AddPatient(null);
-            dialog.setVisible(true);
-        });
     }
 }

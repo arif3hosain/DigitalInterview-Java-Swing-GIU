@@ -2,6 +2,7 @@ package com.app.gui.patient;
 
 
 import com.app.DBUtils.DBConnection;
+import com.app.DBUtils.PatientService;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.awt.*;
@@ -34,6 +35,7 @@ public class EditPatient extends JDialog {
     private JTextField nextOfKinField;
     private JTextField nextOfKinRelationshipField;
     private String patientIDGlobal;
+    PatientService patientService = new PatientService();
 
     public EditPatient(JFrame parent, String patientID) {
 
@@ -147,21 +149,11 @@ public class EditPatient extends JDialog {
             }
         });
         panel.add(cancelButton);
-        fetchPatientDataFromDatabase();
-       
+        fetchPatientIntoForm();
     }
-    private void fetchPatientDataFromDatabase() {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+    private void fetchPatientIntoForm() {
         try {
-            // Establish database connection (replace with your database details)
-            conn = DriverManager.getConnection(DBConnection.JDBC_URL, DBConnection.USERNAME, DBConnection.PASSWORD);
-            String query = "SELECT * FROM patient WHERE PatientID = ?";
-            pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, patientIDGlobal);
-            rs = pstmt.executeQuery();
-
+            ResultSet rs = patientService.fetchPatientDataFromDatabase();
             // Check if result set is not empty
             if (rs.next()) {
                 // Populate fields with fetched data
@@ -204,15 +196,6 @@ public class EditPatient extends JDialog {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            // Close JDBC resources
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
     private void updatePatientRecord() {
@@ -313,68 +296,5 @@ public class EditPatient extends JDialog {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void savePatientRecord() {
-        if (lastNameField.getText().isEmpty() || firstNameField.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "First Name & Last Name are required fields.", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Exit method if name is null
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            // Establish database connection (replace with your database details)
-            conn = DriverManager.getConnection(DBConnection.JDBC_URL, DBConnection.USERNAME, DBConnection.PASSWORD);
-
-            // Prepare SQL insert statement
-            String sql = "INSERT INTO patient (PtLastName, PtPreviousLastName, PtFirstName, " +
-                    "HomeAddress1, HomeCity, HomeState_Province_Region, HomeZip, " +
-                    "Country, Citizenship, PtMobilePhone, EmergencyPhoneNumber, " +
-                    "EmailAddress, PtSS, DOB, Gender, EthnicAssociation, " +
-                    "MaritalStatus, CurrentPrimaryHCP, Comments, NextOfKin, " +
-                    "NextOfKinRelationshipToPatient) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
-
-            // Set parameter values
-            pstmt.setString(1, lastNameField.getText());
-            pstmt.setString(2, prevLastNameField.getText());
-            pstmt.setString(3, firstNameField.getText());
-            pstmt.setString(4, homeAddressField.getText());
-            pstmt.setString(5, homeCityField.getText());
-            pstmt.setString(6, homeStateField.getText());
-            pstmt.setString(7, homeZipField.getText());
-            pstmt.setString(8, countryField.getText());
-            pstmt.setString(9, citizenshipField.getText());
-            pstmt.setString(10, mobilePhoneField.getText());
-            pstmt.setString(11, emergencyPhoneField.getText());
-            pstmt.setString(12, emailField.getText());
-            pstmt.setString(13, ssnField.getText());
-            pstmt.setDate(14, new java.sql.Date(dobPicker.getDate().getTime())); // Convert date picker value to SQL date
-            pstmt.setString(15, (String) genderComboBox.getSelectedItem()); // Get selected item from combo box
-            pstmt.setString(16, ethnicField.getText());
-            pstmt.setString(17, (String) maritalStatusField.getSelectedItem());
-            pstmt.setString(18, primaryHCPField.getText());
-            pstmt.setString(19, commentsField.getText());
-            pstmt.setString(20, nextOfKinField.getText());
-            pstmt.setString(21, nextOfKinRelationshipField.getText());
-
-            // Execute insert query
-            pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Record saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            // Close JDBC resources
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        dispose();
     }
 }

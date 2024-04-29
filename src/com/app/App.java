@@ -23,6 +23,7 @@ public class App extends JFrame {
     private JButton searchButton;
     private JButton viewPatientButton; // New button for viewing patient details
     public static int SELECTED_PATIENT_ID =2;
+    public static String SELECTED_PATIENT_NAME;
 
     public App() {
         super("Patient Selection");
@@ -84,6 +85,7 @@ public class App extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String selectedPatient = patientJList.getSelectedValue();
                 if (selectedPatient != null) {
+                    SELECTED_PATIENT_NAME = selectedPatient;
                     SELECTED_PATIENT_ID = getPatientId(selectedPatient);
                     new PatientListGUI().setVisible(true);
                 } else {

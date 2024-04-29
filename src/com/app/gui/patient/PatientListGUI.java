@@ -6,8 +6,8 @@ package com.app.gui.patient;
 
 import com.app.DBUtils.DBConnection;
 import com.app.App;
-import com.app.gui.familyhistory.FamilyHistoryForm;
-import com.app.interview.FamilyHistoryInterview;
+import com.app.DBUtils.PatientService;
+import com.app.gui.familyhistory.FamilyHistoryGUI;
 import com.app.other.Msg;
 
 import javax.swing.*;
@@ -18,15 +18,15 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class PatientListGUI extends JFrame {
-    Connection conn = null;
-    Statement stmt = null;
-    ResultSet rs = null;
+    ResultSet rsultSet = null;
     private DefaultTableModel tableModel;
     private JTable patientTable;
     private JButton add; // New button
     private JButton edit; // New button
     private JButton delete; // New button
     private JButton familyHistory; // New button
+
+    PatientService patientService = new PatientService();
 
     public PatientListGUI() {
         super("Patient List Form");
@@ -105,11 +105,9 @@ public class PatientListGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[] selectedRows = patientTable.getSelectedRows();
-
-
                 if (selectedRows.length > 0) {
                     String patientID = patientTable.getValueAt(selectedRows[0],0).toString();
-                    com.app.gui.patient.EditPatient editPatientDialog = new com.app.gui.patient.EditPatient(PatientListGUI.this,patientID );
+                    EditPatient editPatientDialog = new EditPatient(PatientListGUI.this,patientID );
                     editPatientDialog.setVisible(true);
                     fetchPatientDataFromDatabase();
                 } else {
@@ -140,7 +138,7 @@ public class PatientListGUI extends JFrame {
         familyHistory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new FamilyHistoryForm().setVisible(true);
+                new FamilyHistoryGUI().setVisible(true);
             }
         });
 
@@ -151,19 +149,14 @@ public class PatientListGUI extends JFrame {
     // Method to fetch patient data from database
     private void fetchPatientDataFromDatabase() {
         try {
-            // Establish database connection (replace with your database details)
-            conn = DBConnection.getConnection();
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM patient where PatientID ="+ App.SELECTED_PATIENT_ID);
-
+            rsultSet = patientService.fetchPatientDataFromDatabase();
             // Clear existing table data
             tableModel.setRowCount(0);
-
             // Populate table with data from database
-            while (rs.next()) {
+            while (rsultSet.next()) {
                 Object[] row = new Object[22];
                 for (int i = 1; i <= 22; i++) {
-                    row[i - 1] = rs.getObject(i);
+                    row[i - 1] = rsultSet.getObject(i);
                 }
                 tableModel.addRow(row);
             }
@@ -174,12 +167,8 @@ public class PatientListGUI extends JFrame {
     }
 
     private void removePatient() {
-        String sql = "DELETE FROM patient WHERE PatientID = ?";
         try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            // Set the value of the parameter in the PreparedStatement
-            pstmt.setInt(1, App.SELECTED_PATIENT_ID);
-            int rowsAffected = pstmt.executeUpdate();
+            int rowsAffected = patientService.deletePatient();
             // Check if any rows were affected (patient deleted)
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(null, Msg.Delete, "Delete Success", JOptionPane.INFORMATION_MESSAGE);
@@ -191,12 +180,4 @@ public class PatientListGUI extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            PatientListGUI patientListGui = new PatientListGUI();
-            patientListGui.setVisible(true);
-            patientListGui.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-        });
-    }
 }

@@ -3,7 +3,16 @@ package com.app.interview; /**
  * Mail: arif@innoweb.co
  * Created at : 4/29/2024
  */
-import javax.swing.*;
+
+import com.app.App;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 class TreeNode {
     String question;
@@ -17,10 +26,12 @@ class TreeNode {
 
 public class FamilyHistoryInterview {
     private TreeNode root;
+    private StringBuilder interviewData;
 
     public FamilyHistoryInterview() {
         // Build the binary tree for the app
         buildTree();
+        interviewData = new StringBuilder();
     }
 
     private void buildTree() {
@@ -40,12 +51,9 @@ public class FamilyHistoryInterview {
         root.noNode.noNode.noNode.noNode = new TreeNode("Is there any other relevant family medical history information that you think is important to mention?");
     }
 
-/*    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new FamilyHistoryInterview().startInterview());
-    }*/
-
     public void startInterview() {
         TreeNode currentNode = root;
+        interviewData.append("Patient ID: ").append(App.SELECTED_PATIENT_ID).append(" - Patient Name: ").append(App.SELECTED_PATIENT_NAME).append("\n");
         while (currentNode != null) {
             String answer = JOptionPane.showInputDialog(null, currentNode.question, "Family History Interview", JOptionPane.QUESTION_MESSAGE);
             if (answer == null) {
@@ -54,6 +62,7 @@ public class FamilyHistoryInterview {
                 return;
             }
             answer = answer.toLowerCase();
+            interviewData.append(currentNode.question).append(": ").append(answer).append("\n");
             if (answer.equals("yes")) {
                 currentNode = currentNode.yesNode;
             } else if (answer.equals("no")) {
@@ -63,6 +72,21 @@ public class FamilyHistoryInterview {
             }
         }
         // End of app
-        JOptionPane.showMessageDialog(null, "End of app. Thank you!");
+        JOptionPane.showMessageDialog(null, "Interview completed. Thank you!");
+
+        // Save interview data to a text file
+        saveInterviewDataToFile();
+    }
+
+    private void saveInterviewDataToFile() {
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH-mm-ss"));
+        String filePath = "D:/interview_data_" + currentTime + ".txt"; // Specify the file path under the C drive with the current time
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(interviewData.toString());
+            JOptionPane.showMessageDialog(null, "Interview data saved to " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error saving interview data.");
+        }
     }
 }

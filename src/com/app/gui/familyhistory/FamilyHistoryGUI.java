@@ -2,7 +2,6 @@ package com.app.gui.familyhistory;
 
 import com.app.App;
 import com.app.DBUtils.DBConnection;
-import com.app.gui.patient.PatientListGUI;
 import com.app.interview.FamilyHistoryInterview;
 import com.app.other.Msg;
 
@@ -11,12 +10,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
-public class FamilyHistoryForm extends JFrame {
+public class FamilyHistoryGUI extends JFrame {
     private JTable table;
     private DefaultTableModel model;
     private JButton addButton;
@@ -25,10 +21,9 @@ public class FamilyHistoryForm extends JFrame {
 
     private JButton startInterview; // New button
 
-    public FamilyHistoryForm() {
+    public FamilyHistoryGUI() {
         setTitle("Family History Form");
         setSize(800, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Initialize components
         initializeComponents();
@@ -82,7 +77,7 @@ public class FamilyHistoryForm extends JFrame {
                     showEditDialog(Integer.parseInt(FamilyHistoryId));
                     fetchDataFromDatabase();
                 } else {
-                    JOptionPane.showMessageDialog(FamilyHistoryForm.this,
+                    JOptionPane.showMessageDialog(FamilyHistoryGUI.this,
                             "Please select at least one Item.",
                             "No Item Selected",
                             JOptionPane.WARNING_MESSAGE);
@@ -104,7 +99,7 @@ public class FamilyHistoryForm extends JFrame {
                     removePatient(Integer.parseInt(familyHistoryId));
                    fetchDataFromDatabase();
                 } else {
-                    JOptionPane.showMessageDialog(FamilyHistoryForm.this,
+                    JOptionPane.showMessageDialog(FamilyHistoryGUI.this,
                             "Please select at least one patient.",
                             "No Patient Selected",
                             JOptionPane.WARNING_MESSAGE);
@@ -134,7 +129,7 @@ public class FamilyHistoryForm extends JFrame {
     private void fetchDataFromDatabase() {
         try {
             Connection conn = DBConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM familyhistory WHERE PatientID = ?");
+            CallableStatement stmt = conn.prepareCall("{CALL fetch_family_history(?)}");
             stmt.setInt(1, App.SELECTED_PATIENT_ID);
             ResultSet rs = stmt.executeQuery();
             model.setRowCount(0);
@@ -159,6 +154,8 @@ public class FamilyHistoryForm extends JFrame {
             e.printStackTrace();
         }
     }
+
+
     private void showAddDialog() {
         AddFamilyHistoryDialog dialog = new AddFamilyHistoryDialog(this);
         dialog.setVisible(true);
@@ -183,7 +180,7 @@ public class FamilyHistoryForm extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(FamilyHistoryForm::new);
+        SwingUtilities.invokeLater(FamilyHistoryGUI::new);
     }
 }
 
